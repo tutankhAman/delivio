@@ -82,6 +82,17 @@ const userCtrl = {
         } catch(err) {
 
         }
+    },
+    getUser: async(req, res) => {
+        try{
+            const user = await Users.findById(req.user.id).select('-password')
+
+            if(!user) return res.status(400).json({msg:"User not found"})
+            res.json(user)
+        }
+        catch(err){
+            return res.json({msg:err.message})
+        }
     }
 }
 
