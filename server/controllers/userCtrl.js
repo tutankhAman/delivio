@@ -69,7 +69,7 @@ const userCtrl = {
             const accesstoken = createAccessToken({id:user._id})
             const refreshtoken = createRefreshToken({id:user._id})
 
-            res.json({msg: "Logged in Successfully!"})
+            res.json({accesstoken})
 
         } catch (err) {
             return res.status(500).json({ msg: err.message })

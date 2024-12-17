@@ -1,111 +1,118 @@
-const Product = require('../models/productModel')
-
-//filtering, sorting, pagination
-class APIfeatures{
-    constructor(query, queryString){
-        this.query = query;
-        this.queryString = queryString
-    }
-
-    filtering(){
-        const queryObj = {...this.queryString}
-        const excludedFields = ['page','sort','limit']
-        excludedFields.forEach(el => delete(queryObj[el]))
-
-        let queryStr = JSON.stringify(queryObj)
-        
-        queryStr = queryStr.replace(/\b(gte|gt|lte|regex)\b/g, match => '$'+ match)
-        
-        console.log({queryObj,queryStr})
-
-        this.query.find(JSON.parse(queryStr))
-
-        return this
-    }
-
-    sorting(){
-        if(this.queryString.sort){
-            const sortBy = this.queryString.sort.split(',').join('')
-
-            this.query = this.query.sort(sortBy)
-            console.log(sortBy)
-        } 
-        else {
-            this.query = this.query.sort('-createdAt')
-        }
-
-        return this
-    }
-
-    pagination(){
-        const page = this.queryString.page * 1 || 1;
-
-        const limit = this.queryString.limit * 1 || 9;
-
-        const akip = (page-1) * limit;
-
-        this.query = this.query.skip(skip).limit(limit)
-    }
-}
+const Product = require("../models/productModel")
+const Restaurant = require("../models/restaurantModel")
 
 const productCtrl = {
     getProducts: async (req, res) => {
         try {
-            const features = new APIfeatures(Product.find(), req.query).filtering().sorting().pagination()
-            const products = await features.query
+            const { restaurantId } = req.query
+            let query = {}
 
-            res.json({result: products.length})
-        } 
-        catch (err) {
+            if (restaurantId) {
+                query.restaurant = restaurantId
+            }
+
+            const products = await Product.find(query)
+                .populate('category', 'name')
+                .populate('restaurant', 'name')
+            
+            res.json(products)
+        } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
     },
     createProduct: async (req, res) => {
         try {
-            const { product_id, title, price, description, content, images, category } = req.body;
+            const { name, description, price, category, restaurant, images } = req.body;
 
-            if (!images) return res.status(400).json({ msg: "No image uploaded" })
+            // Verify restaurant exists
+            const restaurantExists = await Restaurant.findById(restaurant)
+            if (!restaurantExists) {
+                return res.status(400).json({ msg: "Restaurant does not exist" })
+            }
 
-            const product = await Product.findOne({ product_id })
-
-            if (product) return res.status(400).json({ msg: "Product already exists" })
-
-            const newProduct = new Product({
-                product_id, title: title.toLowerCase(), price, description, content, images, category
+            // Create the product
+            const newProduct = new Product({ 
+                name, 
+                description, 
+                price, 
+                category, 
+                restaurant, 
+                images 
             })
 
             await newProduct.save()
 
-            res.json({ msg: "Product created successfully" })
+            // Add product to restaurant's product list
+            await Restaurant.findByIdAndUpdate(
+                restaurant, 
+                { $push: { products: newProduct._id } },
+                { new: true }
+            )
 
+            res.json({ 
+                msg: "Created a Product", 
+                product: newProduct 
+            })
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
     },
     deleteProduct: async (req, res) => {
         try {
-            await Product.findByIdAndDelete(req.params.id)
-            res.json({ msg: "Deleted the product" })
+            const product = await Product.findByIdAndDelete(req.params.id)
+
+            if (!product) {
+                return res.status(404).json({ msg: "Product not found" })
+            }
+
+            // Remove product reference from the associated restaurant
+            await Restaurant.findByIdAndUpdate(
+                product.restaurant, 
+                { $pull: { products: product._id } }
+            )
+
+            res.json({ msg: "Deleted a product" })
         } catch (err) {
-            return res.status(500).json({ msg: "err.message" })
+            return res.status(500).json({ msg: err.message })
         }
     },
     updateProduct: async (req, res) => {
         try {
-            const { product_id, title, price, description, content, images, category } = req.body;
+            const { name, description, price, category, restaurant, images } = req.body;
 
-            if (!images) return res.status(500).json({ msg: "No image uploaded" })
+            // Find the existing product
+            const existingProduct = await Product.findById(req.params.id)
+            if (!existingProduct) {
+                return res.status(404).json({ msg: "Product not found" })
+            }
 
-            await Category.findOneAndUpdate({ _id: req.params.id }, { title:title.toLowerCase(), price, description, content, images, category })
+            // Update product details
+            const updatedProduct = await Product.findByIdAndUpdate(
+                req.params.id, 
+                { name, description, price, category, restaurant, images },
+                { new: true }
+            )
 
-            res.json({ msg: "Updated" })
+            // If restaurant is changed, update product in the new restaurant
+            if (restaurant && restaurant !== existingProduct.restaurant.toString()) {
+                await Restaurant.findByIdAndUpdate(
+                    existingProduct.restaurant, 
+                    { $pull: { products: existingProduct._id } }
+                )
+                await Restaurant.findByIdAndUpdate(
+                    restaurant, 
+                    { $push: { products: existingProduct._id } }
+                )
+            }
 
-            await Product.findByIdAndUpdate({})
+            res.json({ 
+                msg: "Updated Product", 
+                product: updatedProduct 
+            })
         } catch (err) {
-            return res.status(500).json({ msg: "err.message" })
+            return res.status(500).json({ msg: err.message })
         }
-    },
-
+    }
 }
 
 module.exports = productCtrl
