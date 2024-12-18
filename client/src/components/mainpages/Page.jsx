@@ -6,16 +6,18 @@ import Cart from './cart/Cart'
 import HomePage from './home/HomePage'
 import restaurantCatalogue from './restaurants/restaurantCatalogue'
 import {Route, Routes} from 'react-router-dom'
+import DetailProduct from './utils/DetailProducts/DetailProduct'
 
 const Pages = () => {
   return (
     <Routes>
-      <Route path='/' element={<HomePage/>}/>
-      <Route path='/products' element={<Product/>}/>
+      {/* <Route path='/' element={<HomePage/>}/> */}
+      <Route path='/' element={<Product/>}/>
       <Route path='/login' element={<Login/>}/>
       <Route path='/register' element={<Register/>}/>
       <Route path='/cart' element={<Cart/>}/>
       <Route path='/catalogue' element={<restaurantCatalogue/>}/>
+      <Route path='/detail/:id' element={<DetailProduct/>}/>
     </Routes>
   )
 }

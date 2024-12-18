@@ -24,7 +24,6 @@ const productCtrl = {
         try {
             const { name, description, price, category, restaurant, images } = req.body;
 
-            // Verify restaurant exists
             const restaurantExists = await Restaurant.findById(restaurant)
             if (!restaurantExists) {
                 return res.status(400).json({ msg: "Restaurant does not exist" })
@@ -42,7 +41,6 @@ const productCtrl = {
 
             await newProduct.save()
 
-            // Add product to restaurant's product list
             await Restaurant.findByIdAndUpdate(
                 restaurant, 
                 { $push: { products: newProduct._id } },

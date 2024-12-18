@@ -63,7 +63,7 @@ header {
     align-items: center;
 }
 
-input[type="text"] {
+.search-bar {
     border: none;
     border-radius: 20px;
     padding: 10px 15px;

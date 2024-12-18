@@ -2,7 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const cookieParser = require('cookie-parser')
-
+const fileUpload = require('express-fileupload');
+const uploadRouter = require('./routes/upload');
 const app = express();
 
 // Add this line to parse JSON request bodies
@@ -19,8 +20,13 @@ app.listen(PORT, () => {
     console.log("server is running");
 })
 
+app.use(fileUpload({
+    useTempFiles: true // Ensure temp files are enabled
+}));
+
 //Routes
 app.use('/user', require('./routes/userRouter'))
+app.use('/api', require('./routes/upload'))
 app.use('/api', require('./routes/categoryRouter'))
 app.use('/api', require('./routes/restaurantRouter'))
 app.use('/api', require('./routes/productRouter'))

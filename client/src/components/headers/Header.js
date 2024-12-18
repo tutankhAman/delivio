@@ -31,6 +31,7 @@ const Header = () => {
 
       <ul className='functionality'>
         <input
+          className='search-bar'
           type="text"
           placeholder="Search..."
         />      
