@@ -1,4 +1,4 @@
-const category = require("../models/categoryModels")
+const Category = require("../models/categoryModels")
 
 const categoryCtrl = {
     getCategories: async (req, res) => {

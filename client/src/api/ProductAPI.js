@@ -1,23 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
 const ProductAPI = () => {
+  const [products, setProducts] = useState([]) 
 
-    const [products, setProducts] = useState([])
-
-    const getProducts = async()=> {
-        const res=await axios.get('/api/products')
-        console.log(res.data.products)
+  const getProducts = async () => {
+    try {
+      const res = await axios.get('/api/products')
+      console.log('API Response:', res.data) 
+      setProducts(res.data) 
+    } catch (error) {
+      console.error('Failed to fetch products:', error)
     }
+  }
 
-    useEffect(() => {
-        getProducts()
-    }, [])
-
+  useEffect(() => {
+    getProducts() 
+  }, []) 
 
   return {
-    products:[products, setProducts]
-    }
+    products: [products, setProducts], 
+  }
 }
 
 export default ProductAPI
