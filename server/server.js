@@ -5,10 +5,15 @@ const cookieParser = require('cookie-parser')
 const fileUpload = require('express-fileupload');
 const uploadRouter = require('./routes/upload');
 const app = express();
+const cors = require('cors');
 
 // Add this line to parse JSON request bodies
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+  }));
 
 const PORT = process.env.PORT || 5000;
 

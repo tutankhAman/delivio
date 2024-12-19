@@ -11,8 +11,8 @@ const DetailProduct = () => {
     const [DetailProduct, setDetailProduct] = useState(null)
 
     useEffect(() => {
-        console.log('Params ID:', params.id)
-        console.log('All Products:', products)
+        // console.log('Params ID:', params.id)
+        // console.log('All Products:', products)
 
         if (params.id && products.length > 0) {
             const foundProduct = products.find(product => product._id === params.id)
