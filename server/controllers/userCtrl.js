@@ -39,22 +39,19 @@ const userCtrl = {
         }
     },
     refreshtoken: async (req, res) => {
-
         try {
-            const rf_token = req.cookies.refreshtoken
-            if (!rf_token) return res.status(400).json({ msg: "Please ogin or Register" });
+            const rf_token = req.cookies.refreshtoken;
+            if (!rf_token) return res.status(400).json({ msg: "Please Login or Register" });
 
             jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-                if (err) return res.status(400).json({ msg: "Please Login or Register" })
-                const accesstoken = createAccessToken({ id: user.id })
-                res.json({accesstoken});
-            })
-
-            res.json((rf_token))
+                if (err) return res.status(400).json({ msg: "Please Login or Register" });
+                const accesstoken = createAccessToken({ id: user.id });
+                return res.json({ accesstoken });
+            });
+            // res.json(rf_token);
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            return res.status(500).json({ msg: err.message });
         }
-
     },
     login: async (req, res) => {
         try {

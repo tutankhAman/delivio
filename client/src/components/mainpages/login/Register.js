@@ -14,7 +14,7 @@ const Register = () => {
     setUser({...user,[name]:value})
   }
 
-  const registerSubmit = async e => {
+  const RegisterSubmit = async e => {
     e.preventDefault()
     console.log(user)
     try{
@@ -29,14 +29,14 @@ const Register = () => {
 
   return (
     <div className='register-page'>
-      <form onSubmit = {registerSubmit}>
+      <form onSubmit = {RegisterSubmit}>
         <input type='text' name='name' required placeholder='Name' value={user.name} onChange={onChangeInput}/>
         <input type='email' name='email' required placeholder='Email' value={user.email} onChange={onChangeInput}/>
         <input type='password' name='password' required placeholder='Password' value={user.password} onChange={onChangeInput}/>
 
         <div className='row'>
         <button type='submit'>Sign Up</button>
-        <Link to='/register'>Login</Link>
+        <Link to='/login'>Login</Link>
         </div>
       </form>
     </div>
