@@ -4,13 +4,15 @@ import { IoCloseOutline } from "react-icons/io5";
 import { FiShoppingCart } from "react-icons/fi";
 import { Link } from 'react-router-dom'
 import { GlobalState } from '../../GlobalState';
-import axios from 'axios'
+import axios from 'axios';
+
 
 const Header = () => {
 
   const state = useContext(GlobalState);
   const [isLogged, setIsLogged] = state.userAPI ? state.userAPI.isLogged : [false, () => {}];
   const [isAdmin, setIsAdmin] = state.userAPI ? state.userAPI.isAdmin : [false, () => {}];
+  const [cart] = state.userAPI.cart
 
   console.log(state)
   const [menuOpen, setMenuOpen] = useState(false);
@@ -72,7 +74,7 @@ const Header = () => {
         />
         {
           isAdmin ? '': <div className='cart-icon'>
-          <span>0</span>
+          <span>{cart.length}</span>
           <Link to='/cart'><FiShoppingCart /></Link>
         </div>
         }      

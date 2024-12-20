@@ -1,11 +1,23 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
+import React, { useContext } from 'react'
+import { Link } from 'react-router-dom'
+import { GlobalState } from '../../../../GlobalState'
+import BtnRender from './BtnRender'
 
-const ProductList = ({ product }) => {
-  // console.log(product)
+
+const ProductList = ({ product, isAdmin }) => {
+
+  
+
+  const handleCheckboxChange = (e) => {
+    // Handle checkbox change logic here
+  }
 
   return (
     <div className='product_card'>
+      {
+        isAdmin && <input type='checkbox' checked={product.checked} onChange={handleCheckboxChange} />
+      }
+
       <img src={product.images[0]} alt={product.name} />
 
       <div className='product_box'>
@@ -14,10 +26,7 @@ const ProductList = ({ product }) => {
         <p>{product.description}</p>
       </div>
 
-      <div className='row_btn'>
-        <Link className='buy_btn' id='#btn_buy'to={'#!'}>Buy</Link>
-        <Link className='view_btn' id='#btn_view'to={`detail/${product._id}`}>View</Link>
-      </div>
+      <BtnRender product={product}/>
     </div>
   )
 }

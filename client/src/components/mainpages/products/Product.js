@@ -6,6 +6,7 @@ import './Product.css'
 const Product = () => {
   const state = useContext(GlobalState)
   const [products] = state.productAPI.products
+  const [isAdmin] = state.userAPI.isAdmin
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const images = [
