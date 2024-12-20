@@ -31,5 +31,5 @@
 @import url('./components/headers/header.css');
 @import url('./components/mainpages/products/Product.css');
 @import url('./components/mainpages/utils/DetailProducts/detailProduct.css');
-@import url('./components/mainpages/login/Login.css');
-@import url('./components/mainpages/login/Register.css');
+@import url('./components/mainpages/login/login.css');
+@import url('./components/mainpages/login/register.css');
