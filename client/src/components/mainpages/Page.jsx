@@ -8,6 +8,9 @@ import restaurantCatalogue from './restaurants/restaurantCatalogue'
 import {Route, Routes} from 'react-router-dom'
 import DetailProduct from './utils/DetailProducts/DetailProduct'
 import Achievements from './achievements/Achievements'
+import { TbArrowBarUp } from 'react-icons/tb'
+import AboutUs from './about/AboutUs'
+import ContactUs from './contact/ContactUs'
 
 const Pages = () => {
   return (
@@ -20,6 +23,8 @@ const Pages = () => {
       <Route path='/catalogue' element={<restaurantCatalogue/>}/>
       <Route path='/detail/:id' element={<DetailProduct/>}/>
       <Route path='/achievements' element={<Achievements/>}/>
+      <Route path='/about' element={<AboutUs/>}/>
+      <Route path='/contact' element={<ContactUs/>}/>
     </Routes>
   )
 }

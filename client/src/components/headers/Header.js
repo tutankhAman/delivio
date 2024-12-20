@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import { GlobalState } from '../../GlobalState';
 import axios from 'axios';
 import { TbTrophyFilled } from "react-icons/tb";
+import { FiLogOut } from "react-icons/fi";
 
 const Header = () => {
   const state = useContext(GlobalState);
@@ -37,9 +38,11 @@ const Header = () => {
   const loggedRouter = () => {
     return (
       <>
-        {/* Commenting out the order history link for now */}
-        {/* <li><Link to='/history'>Order History</Link></li> */}
-        <li><Link to='/' onClick={logoutUser}>Logout</Link></li>
+        <li>
+          <Link to='/' onClick={logoutUser} className="logout-button">
+            <FiLogOut /> Logout
+          </Link>
+        </li>
       </>
     );
   };
@@ -58,8 +61,8 @@ const Header = () => {
 
       <ul className={`nav-buttons ${menuOpen ? 'open' : ''}`}>
         <li><Link to='/' className='nav-link'>{isAdmin ? 'Products' : 'Catalogue'}</Link></li>
-        <li><Link to='/' className='nav-link'>About Us</Link></li>
-        <li><Link to='/' className='nav-link'>Contact Us</Link></li>
+        <li><Link to='/about' className='nav-link'>About Us</Link></li>
+        <li><Link to='/contact' className='nav-link'>Contact Us</Link></li>
         <li><Link to='/achievements' className='nav-link'><TbTrophyFilled /></Link></li>
       </ul>
 
