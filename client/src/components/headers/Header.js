@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useRef, useEffect } from 'react'
 import { FiMenu } from "react-icons/fi";
 import { IoCloseOutline } from "react-icons/io5";
 import { FiShoppingCart } from "react-icons/fi";
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { GlobalState } from '../../GlobalState';
 import axios from 'axios';
 import { TbTrophyFilled } from "react-icons/tb";
@@ -14,14 +14,33 @@ const Header = () => {
   const [isAdmin, setIsAdmin] = state.userAPI ? state.userAPI.isAdmin : [false, () => {}];
   const [cart] = state.userAPI.cart;
   const [menuOpen, setMenuOpen] = useState(false);
-  const navigate = useNavigate();
-  const [, setSearchTerm] = state.productAPI.search;
+  const [searchTerm, setSearchTerm] = state.productAPI.search;
+  const [products] = state.productAPI.products;
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+  const searchRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target) &&
+          searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    if (window.location.pathname !== '/') {
-      navigate('/');
-    }
+    setShowDropdown(true);
+  };
+
+  const handleProductClick = () => {
+    setShowDropdown(false);
+    setSearchTerm('');
   };
 
   const toggleMenu = () => {
@@ -76,12 +95,37 @@ const Header = () => {
       </ul>
 
       <ul className='functionality'>
-        <input
-          className='search-bar'
-          type="text"
-          placeholder="Search products..."
-          onChange={handleSearch}
-        />
+        <div className="search-container" ref={searchRef}>
+          <input
+            className='search-bar'
+            type="text"
+            placeholder="Search products..."
+            onChange={handleSearch}
+            value={searchTerm}
+          />
+          {showDropdown && searchTerm && (
+            <div className="search-dropdown" ref={dropdownRef}>
+              {products.length > 0 ? (
+                products.map(product => (
+                  <Link 
+                    to={`/detail/${product._id}`} 
+                    key={product._id}
+                    className="search-item"
+                    onClick={handleProductClick}
+                  >
+                    <img src={product.images[0]} alt={product.name} />
+                    <div className="search-item-details">
+                      <h4>{product.name}</h4>
+                      <span>Rs. {product.price}</span>
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                <div className="no-results">No products found</div>
+              )}
+            </div>
+          )}
+        </div>
         {
           isAdmin ? '' : <div className='cart-icon'>
             <span>{cart.length}</span>
