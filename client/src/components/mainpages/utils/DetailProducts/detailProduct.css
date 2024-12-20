@@ -173,3 +173,35 @@
     }
   }
   
+  /* Rating container styles */
+  .rating-container {
+    margin: 20px 0;
+    text-align: left;
+  }
+  
+  .rating-container h3 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .rating {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .star {
+    cursor: pointer;
+    font-size: 24px;
+    color: #ddd;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .star.active {
+    color: #ffd700;
+  }
+  
+  .star:hover {
+    transform: scale(1.1);
+  }
+  
