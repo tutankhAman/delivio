@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import { FiMenu } from "react-icons/fi";
 import { IoCloseOutline } from "react-icons/io5";
 import { FiShoppingCart } from "react-icons/fi";
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { GlobalState } from '../../GlobalState';
 import axios from 'axios';
 import { TbTrophyFilled } from "react-icons/tb";
@@ -14,6 +14,15 @@ const Header = () => {
   const [isAdmin, setIsAdmin] = state.userAPI ? state.userAPI.isAdmin : [false, () => {}];
   const [cart] = state.userAPI.cart;
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const [, setSearchTerm] = state.productAPI.search;
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    if (window.location.pathname !== '/') {
+      navigate('/');
+    }
+  };
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -71,6 +80,7 @@ const Header = () => {
           className='search-bar'
           type="text"
           placeholder="Search products..."
+          onChange={handleSearch}
         />
         {
           isAdmin ? '' : <div className='cart-icon'>
