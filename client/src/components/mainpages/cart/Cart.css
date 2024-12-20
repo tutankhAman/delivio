@@ -202,3 +202,57 @@
 .done-btn:hover {
   background: #45a049;
 } 
+
+.applied-reward {
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid #4CAF50;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.applied-reward svg {
+  color: #4CAF50;
+  font-size: 20px;
+}
+
+.applied-reward div {
+  display: flex;
+  flex-direction: column;
+}
+
+.reward-title {
+  font-weight: 600;
+  color: #4CAF50;
+  font-size: 0.9rem;
+}
+
+.reward-description {
+  color: #666;
+  font-size: 0.85rem;
+  margin-top: 2px;
+}
+
+.reward-discount {
+  color: #4CAF50;
+  font-weight: 500;
+}
+
+.invoice-row span:first-child {
+  color: #666;
+}
+
+.invoice-row.total {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px solid #eee;
+}
+
+.invoice-row.total span {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+} 
